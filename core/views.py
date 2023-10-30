@@ -5,6 +5,13 @@ from django.http import HttpResponse
 def home(request):
     return render(request, 'core/index.html')
 
+def dasboard(request):
+    return render(request, 'core/dashboard')
+
+
+def cadastro(request):
+    return render('core/cadatro.html')
+
 
 def chamados(request):
     pass
