@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header"><strong>Chamado</strong><span class="small ms-1"></span></div>
+        <div class="card-body">
+          <div class="example">
+            <ul class="nav nav-tabs" role="tablist">
+             </ul>
+            <div class="tab-content rounded-bottom">
+              <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1000">
+                <form id="formulario-chamado" method="post">
+                    {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label" for="exampleFormControlInput1">Tipo</label>
+                    <select class="form-select" name="tipo" aria-label="Default select example">
+                        {% for tipo in tipos %}                            
+                            <option value={{tipo.id}}>{{tipo.descricao}}</option>                        
+                        {% endfor %}
+
+                        {% comment %} <option selected>Garantia</option>
+                        <option value="1">Contrato</option>
+                        <option value="2">Externo</option>
+                        <option value="3">Solicitação de Peças</option> {% endcomment %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"  for="exampleFormControlInput1">Setor</label>
+                    <select class="form-select" name="setor" aria-label="Default select example">
+                        {% for setor in setores %}
+                        <option value={{ setor.id }}>{{ setor.descricao}}</option>
+                        {% endfor %}                  
+                      </select>
+                </div>
+                <div class="row g-3 align-items-center">
+                  
+                    <div class="col-auto">
+                        <label class="form-label" for="exampleFormControlInput1">Nº O.S</label>
+                        <input class="form-control" required="true" name="ordem_servico" id="exampleFormControlInput1" type="text" placeholder="name@example.com">
+                    </div>
+
+                    <div class="col">
+                        <label class="form-label" for="exampleFormControlInput1">Produto</label>
+                        <input class="form-control" name="produto" id="exampleFormControlInput1" type="text" placeholder="name@example.com">
+                    </div>    
+                
+
+                </div>
+                <p></p>
+                <div class="mb-3">
+                  <label class="form-label" for="exampleFormControlTextarea1">Descrição</label>
+                  <textarea class="form-control" name="descricao" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="exampleFormControlInput1">Status</label>
+                    <select class="form-select" name="situacao" aria-label="Default select example">
+                        {% for situacao in situacoes %}
+                        <option value="{{ situacao.id}}">{{ situacao.descricao}}</option>
+                        {% endfor %}
+                       
+                      </select>
+                </div>
+                <div class="mb-3" align="right">
+                    <button type="submit" class="btn btn-primary mb-3">Salvar</button>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#formulario-chamado').on('submit', function(event) {
+              event.preventDefault(); // Impede o envio tradicional do formulário
+  
+              $.ajax({
+                  url: '{% url 'abrir-chamados' %}', // Substitua pelo URL correto
+                  type: 'POST',
+                  data: $(this).serialize(), // Serializa os dados do formulário
+                  success: function(response) {
+                      if (response.success) {
+                          alert('Chamado salvo com sucesso!');
+                          // Redirecione ou atualize a página conforme necessário
+                      } else {                        
+                          alert('Erro ao salvar o chamado. Verifique os campos.');
+                          // Trate os erros ou exiba mensagens de erro no formulário
+                      }
+                  }
+              });
+          });
+      });
+  </script>
+  
+
+
+
+{% endblock %}

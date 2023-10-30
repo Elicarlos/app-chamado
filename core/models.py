@@ -14,18 +14,19 @@ class Base(models.Model):
         self.update_at = timezone.now()
         super().save(*args, **kwargs)
 
-
+# Gerente / Administrativo
 class Cargo(Base):
     descricao = models.CharField(max_length=50)
 
     def __str__(self) -> str:
         return self.descricao
 
+#Ex: Almoxarifado
 class Setor(Base):
-    setor = models.CharField(max_length=255, unique=True)
+    descricao = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
-        return self.setor
+        return self.descricao
     
 
 
@@ -49,7 +50,7 @@ class Tipo(Base):
 
 
 
-# Concluido / Em Execução / Verificao / Aguardando Peça
+# Concluido / Em Execução / Verificação / Aguardando Peça
 class Situacao(Base):
     descricao = models.CharField(max_length=100)
 
@@ -74,12 +75,12 @@ class Produto(Base):
 class Chamado(Base):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     tipo = models.ForeignKey(Tipo, on_delete=models.SET_NULL, null=True)
+    setor = models.ForeignKey(Setor, on_delete=models.SET_NULL, null=True)
     ordem_servico = models.CharField(max_length=100)  # Referente ao shop9
     situacao = models.ForeignKey(Situacao, on_delete=models.SET_NULL, null=True)
     descricao = models.CharField(max_length=100)    
-    setor = models.ForeignKey(Setor, on_delete=models.SET_NULL, null=True)
     produtos = models.ManyToManyField(Produto, blank=True)
-    data_abertura = models.DateField()
+    data_abertura = models.DateTimeField(default=timezone.now, editable=True, blank=True)
     data_aprovacao = models.DateField(null=True, blank=True)
     aberta_por = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, related_name='chamados_abertos', null=True, blank=True)
     aprovada_por = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, related_name='chamados_aprovados', null=True, blank=True)
